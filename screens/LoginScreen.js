@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, KeyboardAvoidingView, TextInput, StyleSheet, Text, Platform, TouchableWithoutFeedback, Button, Keyboard, Image, TouchableOpacity, AsyncStorage  } from 'react-native';
 import { Updates } from 'expo';
+import DeviceInfo from 'react-native-device-info';
 
 import Setting from '../constants/Setting';
 export default class LoginScreen extends Component {
@@ -9,8 +10,9 @@ export default class LoginScreen extends Component {
   {
     super();
     this.state = {
-      username: '',
-      password: ''
+      email: '',
+      password: '',
+      device_name: DeviceInfo.getModel()
     }
   }
 
@@ -26,14 +28,13 @@ export default class LoginScreen extends Component {
 
   submitLoginForm()
   {
-    //console.warn(this.state);
-    //console.warn(Setting.LoginUrl);
+    console.log(this.state);
 
-    fetch('http://127.0.0.1/ddl/api/login', {
+    fetch('http://localhost:8000/api/login', {
       method: 'POST',
-      body: JSON.stringify(this.state),
+      body: this.state,
       headers: new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'multipart/form-data'
       })
     }).then(data => data.json())
     .then(res => {
@@ -132,7 +133,7 @@ export default class LoginScreen extends Component {
               style={ styles.inputStyle } 
               placeholder={t("Email or Username")} 
               placeholderTextColor="#555" 
-              onChangeText={ (text) => { this.setState({ username: text}) }} 
+              onChangeText={ (text) => { this.setState({ email: text}) }}
             />
             <TextInput 
               style={ styles.inputStyle } 

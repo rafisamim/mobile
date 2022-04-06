@@ -6,6 +6,7 @@ import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import I18n from './locales';
+import { NativeModules } from 'react-native';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -28,10 +29,28 @@ export default function App(props) {
   }
 }
 
+async function changeLang(lang = 'en') {
+
+  try {
+    await AsyncStorage.setItem('lang', lang);
+    I18n.changeLanguage(lang);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 async function loadResourcesAsync() {
 
+  const locale = NativeModules.I18nManager.localeIdentifier;
   await AsyncStorage.getItem('lang').then((value) => {
-    I18n.changeLanguage(value);
+    if(value==null) {
+      console.log(locale.substring(0,2));
+   changeLang(locale.substring(0,2));
+    }
+    else{
+      console.log(value);
+     changeLang(value)
+    }
   })
 
   await Promise.all([

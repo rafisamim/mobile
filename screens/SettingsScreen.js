@@ -44,6 +44,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   btn: {
-    padding:20
   }
 });

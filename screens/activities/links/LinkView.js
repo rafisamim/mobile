@@ -5,20 +5,20 @@ import Setting from '../../../constants/Setting';
 export default function LinkView({ navigation }) {
 
     LinkView.navigationOptions = {
-      title: navigation.getParam('title'),
+        title: navigation.getParam('title'),
     };
 
-    let forbiddenLinks = ['fa/impact', 'en/impact'];
+    let forbiddenLinks = ['fa/impact', 'en/impact', 'ps/impact'];
 
     return (
-        <WebView 
-          source={{ uri: Setting.baseUrl + ((!forbiddenLinks.includes(navigation.getParam('path'))) ? 'api/api_' : '') + navigation.getParam('path') }}
-          scalesPageToFit={true}
-          bounces={true}
-          //scrollEnabled={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          injectedJavaScript={ 'document.getElementsByClassName("header")[0].remove();' }
+        <WebView
+            source={{ uri: Setting.baseUrl + ((!forbiddenLinks.includes(navigation.getParam('path'))) ? 'api/page_view/' : '') + navigation.getParam('path').split('/').pop() }}
+            scalesPageToFit={true}
+            bounces={true}
+            //scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            injectedJavaScript={ 'document.getElementsByClassName("header")[0].remove();' }
         />
     );
 }

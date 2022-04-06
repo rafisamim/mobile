@@ -21,6 +21,6 @@ export default {
   resourceCategories: mainUrl + 'api/resource_categories/',
   featuredResources: mainUrl + 'api/featured_resources/',
   linksApi: mainUrl + 'api/links/',
-  newsApi: mainUrl + 'api/news/',
+  newsApi: mainUrl + 'api/news_list/',
   pageApi: mainUrl + 'api/page/',
 };

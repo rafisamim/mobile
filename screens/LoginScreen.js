@@ -1,7 +1,20 @@
-import React, { Component } from 'react';
-import { View, KeyboardAvoidingView, TextInput, StyleSheet, Text, Platform, TouchableWithoutFeedback, Button, Keyboard, Image, TouchableOpacity, AsyncStorage  } from 'react-native';
+import React, {Component, useState} from 'react';
+import {
+  View,
+  KeyboardAvoidingView,
+  TextInput,
+  StyleSheet,
+  Text,
+  Platform,
+  TouchableWithoutFeedback,
+  Button,
+  Keyboard,
+  Image,
+  TouchableOpacity,
+  AsyncStorage,
+  Alert
+} from 'react-native';
 import { Updates } from 'expo';
-import DeviceInfo from 'react-native-device-info';
 
 import Setting from '../constants/Setting';
 export default class LoginScreen extends Component {
@@ -12,8 +25,11 @@ export default class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
-      device_name: DeviceInfo.getModel()
+      device_name:'galaxy', // need to get it dynamically used some modules but did not work with different devices
+      error:'',
+      show:false
     }
+
   }
 
   setLoginStatus(state)
@@ -28,23 +44,38 @@ export default class LoginScreen extends Component {
 
   submitLoginForm()
   {
-    console.log(this.state);
+    let formdata = new FormData();
+    formdata.append('email',this.state.email);
+    formdata.append('password',this.state.password);
+    formdata.append('device_name',this.state.device_name);
 
-    fetch('http://localhost:8000/api/login', {
+    // connected with my local server for development
+
+    fetch('http://192.168.0.105:8000/api/login', {
       method: 'POST',
-      body: this.state,
+      body: formdata,
       headers: new Headers({
-        'Content-Type': 'multipart/form-data'
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
       })
     }).then(data => data.json())
     .then(res => {
-      console.log(res);
+      if(res.message){
+      this.setState({show:true})
+      this.setState({error:res.message})
+      }else if(res.user){
+        AsyncStorage.setItem('user', res.user);
+        AsyncStorage.setItem('token', res.token);
+        this.setLoginStatus('signedIn')
+        console.log(res);
+      }
     });
   }
-  
+
   render(){
 
     let { t, i18n} = this.props.screenProps;
+
     const { navigate } = this.props.navigation;
 
     const styles = StyleSheet.create({
@@ -101,19 +132,44 @@ export default class LoginScreen extends Component {
         paddingVertical: 15,
         marginBottom: 20
       },
-    
+
+      btnPrimary: {
+        borderRadius: 35,
+        paddingVertical: 15,
+        marginBottom: 20
+      },
+
       btnText: {
         textAlign: 'center',
         color: '#fff',
         fontWeight: 'bold'
+      },
+      TextSlim: {
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'normal'
+      },
+
+      TextLarge: {
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize:18
+      },
+      error: {
+        textAlign: (i18n.language != 'en') ? 'right' : 'left',
+        color: '#da7437',
+        fontWeight: 'bold',
+        marginBottom:20,
+        paddingLeft: 15,
+        paddingRight: 15,
       }
     });
 
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+        style={styles.container} >
           
       <View style={styles.skipButton}>
         <Button title={t("Skip")} onPress={() => { this.setLoginStatus('skipped') }} />
@@ -141,10 +197,14 @@ export default class LoginScreen extends Component {
               secureTextEntry={true} 
               onChangeText={ (text) => { this.setState({ password: text}) }} 
             />
+            {this.state.show ? <Text style={ styles.error }>{this.state.error}</Text> : null}
             <TouchableOpacity style={ styles.btn } onPress={() => this.submitLoginForm()}>
               <Text style={ styles.btnText }>{t('Sign In')}</Text>
             </TouchableOpacity>
-            <Button title={t('Register')} onPress={ () => { navigate('Signup') } } />
+            <Text style={ styles.TextSlim }>Don't have an account?</Text>
+            <TouchableOpacity style={ styles.btnPrimary } onPress={ () => { navigate('Signup') } }>
+              <Text style={ styles.TextLarge }>Sign up</Text>
+            </TouchableOpacity>
           </View>
 
           </View>

@@ -90,7 +90,11 @@ export default class ResourceDetail extends Component {
         fontSize: (i18n.language != 'en') ? 11 : 13,
         writingDirection: (i18n.language != 'en') ? 'rtl' : 'ltr',
       },
-      title:{
+      textWhite:{
+        marginTop: 10,
+        textAlign: 'justify',
+        color: 'white',
+        fontSize: (i18n.language != 'en') ? 11 : 13,
         writingDirection: (i18n.language != 'en') ? 'rtl' : 'ltr',
       },
       user:{
@@ -225,7 +229,7 @@ export default class ResourceDetail extends Component {
           this.props.navigation.navigate('RenderPDF', { data: attachment, title: this.props.navigation.getParam('title') }) 
         }>
           <FontAwesome.Button name={ fileType } backgroundColor="#9C6C1F" size={20}>
-            <Text style={ styles.text, {color: 'white'} }> { attachment.file_name }</Text>
+            <Text style={ styles.textWhite}> { attachment.file_name }</Text>
           </FontAwesome.Button>
         </TouchableOpacity>
       )

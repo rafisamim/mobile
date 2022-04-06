@@ -8,11 +8,11 @@ export default function LinkView({ navigation }) {
       title: navigation.getParam('title'),
     };
 
-    let forbiddenLinks = ['fa/impact', 'en/impact'];
+    let forbiddenLinks = ['fa/impact', 'en/impact', 'ps/impact'];
 
     return (
         <WebView 
-          source={{ uri: Setting.baseUrl + ((!forbiddenLinks.includes(navigation.getParam('path'))) ? 'api/api_' : '') + navigation.getParam('path') }}
+          source={{ uri: Setting.baseUrl + ((!forbiddenLinks.includes(navigation.getParam('path'))) ? 'api/page_view/' : '') + navigation.getParam('path').split('/').pop() }}
           scalesPageToFit={true}
           bounces={true}
           //scrollEnabled={false}

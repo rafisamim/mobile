@@ -10,7 +10,7 @@ export default function NewsView({ navigation }) {
 
     return (
         <WebView 
-          source={{ uri: Setting.baseUrl + 'api/api_news/' + navigation.getParam('id') }}
+          source={{ uri: Setting.baseUrl + 'api/news_view/' + navigation.getParam('id') }}
           scalesPageToFit={true}
           bounces={true}
           //scrollEnabled={false}

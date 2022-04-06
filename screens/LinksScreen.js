@@ -22,8 +22,9 @@ export default class LinksScreen extends React.Component {
     await fetch(Setting.linksApi + this.props.screenProps.i18n.language)
     .then(data => data.json())
     .then(res => {
+      console.log(res);
       this.setState({
-        data: res.data,
+        data: res,
         isLoading: false
       });
     })
@@ -43,7 +44,7 @@ export default class LinksScreen extends React.Component {
       )
     }
 
-    _renderItem = ({ item }) => (
+    let _renderItem = ({ item }) => (
       <View>
         <TouchableOpacity style={styles.option} onPress={ () => { navigate('LinkView', item) }}>
           <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>

@@ -11,12 +11,13 @@ export default class FeaturedResources extends React.Component {
         marginLeft: (this.props.language != 'en') ? 8 : 0, 
         marginRight: (this.props.language != 'en') ? 0 : 8, 
         height:100, 
-        width: 120, 
+        width: 120,
         marginBottom: 10, 
         borderWidth: 1, 
         borderColor: '#ddd', 
         borderRadius: 10, 
-        backgroundColor: '#fafafa'
+        backgroundColor: '#fafafa',
+        padding: 5
       },
       subjectText: {
         fontSize: 12,

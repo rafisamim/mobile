@@ -1,5 +1,12 @@
 {
     "translation":{
+        "no account" : "حساب نه لري؟",
+        "have account" : "حساب لری؟",
+        "Signup to Darakht-e-Danesh Library" : "درخت دانش کتابتون ته نوم لیکنه وکړئ",
+        "Activate now" : "همدا اوس فعال کړئ",
+        "Later" : "وروسته",
+        "created" : "ستاسو حساب جوړ شوی، ایا تاسو غواړئ خپل بریښنالیک اوس تایید کړئ؟",
+        "Skip" : "پرېښودل",
     "home": "کورپاڼه",
     "resources": "کتابتون",
     "library": "کتابتون",

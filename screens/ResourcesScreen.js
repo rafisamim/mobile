@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, Text, View, Image, RefreshControl } from 'react-native';
+import {StyleSheet, ActivityIndicator, Text, View, Image, RefreshControl, Share} from 'react-native';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { SearchBar } from 'react-native-elements';
 
 import Setting from '../constants/Setting';
+import {Ionicons} from "@expo/vector-icons";
+import ResourceDetail from "./activities/resources/ResourceDetailScreen";
 
 export default class ResourcesScreen extends React.Component {
 
@@ -79,16 +81,23 @@ export default class ResourcesScreen extends React.Component {
   }
   
   renderHeader = () => {    
-    return (      
-      <SearchBar
-        placeholder={ this.props.screenProps.t("SEARCH OUR GROWING LIBRARY!") }
-        lightTheme
-        onChangeText={text => this.searchFilterFunction(text)}
-        containerStyle={{backgroundColor: 'white', borderBottomColor: '#fff', borderTopColor: '#fff', padding: 5}}
-        inputContainerStyle={{ backgroundColor: '#eee' }}
-        autoCorrect={false}
-        value={this.state.searchQuery}
-      />
+    return (
+        <View>
+          <View>
+            <Text style={ {textAlign: "center", fontSize: 16, padding:5} }>{ this.props.navigation.getParam('title') }</Text>
+          </View>
+        <View>
+          <SearchBar
+              placeholder={ this.props.screenProps.t("SEARCH OUR GROWING LIBRARY!") }
+              lightTheme
+              onChangeText={text => this.searchFilterFunction(text)}
+              containerStyle={{backgroundColor: 'white', borderBottomColor: '#fff', borderTopColor: '#fff', padding: 5}}
+              inputContainerStyle={{ backgroundColor: '#eee' }}
+              autoCorrect={false}
+              value={this.state.searchQuery}
+          />
+    </View>
+        </View>
     );  
   }
 
@@ -115,10 +124,35 @@ export default class ResourcesScreen extends React.Component {
       )
     }
 
-    _renderItem = ({ item }) => (
+    let _renderItem = ({ item }) => (
       <View 
         style={{ flex:3, width:200, height: 180, backgroundColor:'#eee', padding: 10, margin:5, alignItems: 'center', borderWidth:0.5, borderColor:'#eee' }}>
-        <TouchableOpacity onPress={ () => { navigate('ResourceDetail', item) }}>
+        <TouchableOpacity onPress={ () => {
+          navigate('ResourceDetail', item)
+          ResourceDetail.navigationOptions = {
+            title: item.title,
+            headerRight: (
+                <Ionicons name='ios-share' size={24} style={{ marginRight: 20 }} onPress={ async () => {
+                  try {
+                    const result = await Share.share({
+                      message: Setting.mainUrl + this.props.screenProps.i18n.language + '/resource/' + item.id,
+                    });
+                    if (result.action === Share.sharedAction) {
+                      if (result.activityType) {
+                        // shared with activity type of result.activityType
+                      } else {
+                        // shared
+                      }
+                    } else if (result.action === Share.dismissedAction) {
+                      // dismissed
+                    }
+                  } catch (error) {
+                    alert(error.message);
+                  }
+                } } />
+            )
+          }
+        }}>
 
           <Image 
             style={{ height:100, width:100, resizeMode: 'stretch' }} 

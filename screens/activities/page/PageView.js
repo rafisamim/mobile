@@ -2,33 +2,39 @@ import React from 'react';
 import WebView from 'react-native-webview';
 import { StyleSheet, ActivityIndicator, Text, View, RefreshControl } from 'react-native';
 import Setting from '../../../constants/Setting';
+import i18nManager from "react-native-web/dist/exports/I18nManager";
 
 export default class PageView extends React.Component {
 
   state = {
-    isLoading: true,
+    pageLoading: true,
     refreshing: false,
     text: 'loading',
     data: ''
   }
+
+  pages = [
+    {lang: 'en' , page: '4137'},
+    {lang: 'fa' , page: '4133'},
+    {lang: 'ps' , page: '4134'}
+  ]
   
   getPageDetails = async() => {
-    await fetch(Setting.pageApi + 4137 + '/' + this.props.screenProps.i18n.language)
-    .then(data => data.json())
+    await fetch(Setting.pageApi + this.pages.find(e => e.lang == 'en').page )
     .then(res => {
       this.setState({
         pageDataSource: res,
         pageLoading: false
       });
-
-      console.log(pageDataSource);
     })
   }
 
   render()
   {
+    let { t, i18n} = this.props.screenProps;
     const { navigate } = this.props.navigation;
-    if(this.state.isLoading){
+    this.getPageDetails();
+    if(this.state.pageLoading){
       return(
         <View style={{ flex: 1, alignItems: 'center', padding:0, paddingTop: 15 }}>
           <ActivityIndicator animating size={'small'} />
@@ -36,13 +42,11 @@ export default class PageView extends React.Component {
       )
     }
 
-    PageView.navigationOptions = {
-      title: "COVID-19",
-    };
+
 
     return (
         <WebView 
-          source={{ uri: Setting.pageApi + 4137 + '/en' + this.props.screenProps.i18n.language }}
+          source={{ uri: Setting.pageApi + this.pages.find(e => e.lang == i18n.language).page }}
           scalesPageToFit={true}
           bounces={true}
           //scrollEnabled={false}
@@ -53,4 +57,8 @@ export default class PageView extends React.Component {
     );
 
   }
+
 }
+PageView.navigationOptions = {
+  title: "COVID-19",
+};

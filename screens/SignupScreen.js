@@ -11,9 +11,10 @@ import {
   Keyboard,
   Image,
   TouchableOpacity,
-  Alert, AsyncStorage
+  Alert, AsyncStorage, Linking
 } from 'react-native';
 import {Updates} from "expo";
+import Setting from "../constants/Setting";
 
 export default class SignupScreen extends Component {
   constructor()
@@ -50,7 +51,7 @@ export default class SignupScreen extends Component {
     formdata.append('password',this.state.password);
     formdata.append('username',this.state.username);
 
-    fetch('http://192.168.0.105:8000/api/register', {
+    fetch(Setting.SignUpUrl, {
       method: 'POST',
       body: formdata,
       headers: new Headers({
@@ -69,10 +70,15 @@ export default class SignupScreen extends Component {
             this.setState({showNameError:true})
             this.setState({errorName:res.username[0]})
           }if(res.user){
+            let {t,i18n} = this.props.screenProps;
             Alert.alert(
-                "Thank you "+res.user+" !",
-                "Your account has been created",
-                [{ text: "OK", onPress: () => this.setLoginStatus('signedIn') }]
+                t("Welcome ") +res.user+" !",
+                t("created"),
+                [{ text: t("Activate now"), onPress: () =>  {
+                    Linking.openURL('https://darakhtdanesh.org/'+i18n.language+'/email/verify');
+                    setTimeout(function(){  AsyncStorage.setItem('loginState', 'signedIn'); Updates.reload(); }, 5000);
+                  } },
+                  { text: t("Later"), onPress: () => this.setLoginStatus('signedIn') }]
             );
             AsyncStorage.setItem('user', res.user);
             AsyncStorage.setItem('token', res.token);
@@ -82,7 +88,9 @@ export default class SignupScreen extends Component {
   }
 
   render(){
-    let { t, i18n} = this.props.screenProps;
+
+
+    let { t,i18n} = this.props.screenProps;
     const { navigate } = this.props.navigation;
 
     const styles = StyleSheet.create({
@@ -113,7 +121,8 @@ export default class SignupScreen extends Component {
       loginText: {
         color: '#777',
         fontSize: 18,
-        marginTop: 10
+        marginTop: 10,
+        textAlign: 'center'
       },
 
       formContainer: {
@@ -127,6 +136,7 @@ export default class SignupScreen extends Component {
         borderRadius: 35,
         height: 45,
         paddingLeft: 15,
+        paddingRight: 15,
         marginBottom: 20,
       },
 
@@ -177,35 +187,35 @@ export default class SignupScreen extends Component {
             style={styles.container} >
 
           <View style={styles.skipButton}>
-            <Button title="Skip" onPress={() => { this.setLoginStatus('skipped') }} />
+            <Button color={'#333'} title={t("Skip")} onPress={() => { this.setLoginStatus('skipped') }} />
           </View>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.inner}>
 
               <View style={styles.logoContainer}>
                 <Image source={require('../assets/logo-ddl.png')} />
-                <Text style={styles.loginText}>Signup to Darakht-e Danesh Library</Text>
+                <Text style={styles.loginText}> {t("Signup to Darakht-e-Danesh Library")} </Text>
               </View>
 
               <View style={styles.formContainer}>
-                <TextInput style={ styles.inputStyle } placeholder="Email" placeholderTextColor="#555"
+                <TextInput style={ styles.inputStyle } placeholder={t("Email")} placeholderTextColor="#555"
                            onChangeText={ (text) => { this.setState({ email: text}) }} />
                 {this.state.showEmailError ? <Text style={ styles.error }>{this.state.errorEmail}</Text> : null}
 
-                <TextInput style={ styles.inputStyle } placeholder="Username" placeholderTextColor="#555"
+                <TextInput style={ styles.inputStyle } placeholder={t("Username")} placeholderTextColor="#555"
                            onChangeText={ (text) => { this.setState({ username: text}) }} />
                 {this.state.showNameError ? <Text style={ styles.error }>{this.state.errorName}</Text> : null}
 
-                <TextInput style={ styles.inputStyle } placeholder="Password" placeholderTextColor="#555" secureTextEntry={true}
+                <TextInput style={ styles.inputStyle } placeholder={t("Password")} placeholderTextColor="#555" secureTextEntry={true}
                            onChangeText={ (text) => { this.setState({ password: text}) }} />
                 {this.state.showPasswordError ? <Text style={ styles.error }>{this.state.errorPassword}</Text> : null}
 
                 <TouchableOpacity style={ styles.btn } onPress={ () => this.submitSignupForm() }>
-                  <Text style={ styles.btnText }>Sign Up</Text>
+                  <Text style={ styles.btnText }>{t('Register')}</Text>
                 </TouchableOpacity>
-                <Text style={ styles.TextSlim }>Already have an account?</Text>
+                <Text style={ styles.TextSlim }> {t('have account')} </Text>
                 <TouchableOpacity style={ styles.btnPrimary } onPress={ () => { navigate('Login') } }>
-                  <Text style={ styles.TextLarge }>Sign in</Text>
+                  <Text style={ styles.TextLarge }>{t('Sign In')}</Text>
                 </TouchableOpacity>
               </View>
             </View>

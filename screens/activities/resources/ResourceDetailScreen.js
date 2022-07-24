@@ -6,6 +6,7 @@ import Setting from '../../../constants/Setting';
 import { FontAwesome } from '@expo/vector-icons';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import RenderPDF from "./RenderPDF";
 
 export default class ResourceDetail extends Component {
 
@@ -33,32 +34,6 @@ export default class ResourceDetail extends Component {
   render(){
 
     let { t, i18n} = this.props.screenProps;
-
-    const shareResource = async() => {
-      try {
-        const result = await Share.share({
-          url: Setting.mainUrl + i18n.language + '/resource/' + this.props.navigation.getParam('id'),
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            // shared with activity type of result.activityType
-          } else {
-            // shared
-          }
-        } else if (result.action === Share.dismissedAction) {
-          // dismissed
-        }
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    ResourceDetail.navigationOptions = {
-      title: this.props.navigation.getParam('title'),
-      headerRight: (
-          <Ionicons name='ios-share' size={24} style={{ marginRight: 20 }} onPress={ () => shareResource() } />
-      )
-    }
 
     const styles = StyleSheet.create({
       container: {
@@ -128,6 +103,8 @@ export default class ResourceDetail extends Component {
         margin: 3,
       },
       iconsContainer:{
+        marginTop:10,
+        marginRight:10,
         flexDirection: 'row',
         justifyContent: 'flex-end',
       },
@@ -225,8 +202,14 @@ export default class ResourceDetail extends Component {
       else if(attachment.file_mime == 'audio/mpeg') fileType = "file-audio-o";
 
       return(
-          <TouchableOpacity key={key} style={{ marginTop:5 }} onPress={ () =>
-              this.props.navigation.navigate('RenderPDF', { data: attachment, title: this.props.navigation.getParam('title') })
+          <TouchableOpacity key={key} style={{ marginTop:5 }} onPress={ () => {
+            this.props.navigation.navigate({
+              routeName: 'RenderPDF',
+              key: this.props.navigation.getParam('title'),
+              params: {data: attachment, title: this.props.navigation.getParam('title')}
+            })
+
+          }
           }>
             <FontAwesome.Button name={ fileType } backgroundColor="#9C6C1F" size={20}>
               <Text style={ styles.textWhite}> { attachment.file_name }</Text>
@@ -252,7 +235,7 @@ export default class ResourceDetail extends Component {
         <ScrollView>
           <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View>
+              <View style={ {paddingBottom: 30} }>
 
                 <View style={styles.shadow}>
                   <Image style={styles.coverPhoto} source={{uri: img }} />
@@ -266,17 +249,6 @@ export default class ResourceDetail extends Component {
                     </View>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.iconBtn} onPress={()=>{alert('Added to Favorites')}}>
-                    <View style={styles.icons}>
-                      <Ionicons name="ios-star" size={26} color="#FFA800" />
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.iconBtn} onPress={()=>{alert('Flagged')}}>
-                    <View style={styles.icons}>
-                      <Ionicons name="ios-flag" size={26} color="#FFA800" />
-                    </View>
-                  </TouchableOpacity>
                 </View>
 
                 <View style={styles.container}>
@@ -353,7 +325,6 @@ export default class ResourceDetail extends Component {
                 <View style={styles.container}>
                   <Text style={styles.title}>{ t('Comments') }</Text>
                   { comments }
-                  <TextInput placeholder={t('Comment')} style={styles.commentInput}></TextInput>
                 </View>
               </View>
             </TouchableWithoutFeedback>

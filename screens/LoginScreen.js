@@ -25,7 +25,7 @@ export default class LoginScreen extends Component {
         this.state = {
             email: '',
             password: '',
-            device_name:'galaxy', // need to get it dynamically used some modules but did not work with different devices
+            device_name:'samim', // need to get it dynamically used some modules but did not work with different devices
             error:'',
             show:false
         }
@@ -51,7 +51,7 @@ export default class LoginScreen extends Component {
 
         // connected with my local server for development
 
-        fetch('http://192.168.0.105:8000/api/login', {
+        fetch(Setting.LoginUrl, {
             method: 'POST',
             body: formdata,
             headers: new Headers({
@@ -172,7 +172,7 @@ export default class LoginScreen extends Component {
                 style={styles.container} >
 
                 <View style={styles.skipButton}>
-                    <Button title={t("Skip")} onPress={() => { this.setLoginStatus('skipped') }} />
+                    <Button color={'#333'} title={t("Skip")} onPress={() => { this.setLoginStatus('skipped') }} />
                 </View>
 
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -201,9 +201,9 @@ export default class LoginScreen extends Component {
                             <TouchableOpacity style={ styles.btn } onPress={() => this.submitLoginForm()}>
                                 <Text style={ styles.btnText }>{t('Sign In')}</Text>
                             </TouchableOpacity>
-                            <Text style={ styles.TextSlim }>Don't have an account?</Text>
+                            <Text style={ styles.TextSlim }> {t('no account')} </Text>
                             <TouchableOpacity style={ styles.btnPrimary } onPress={ () => { navigate('Signup') } }>
-                                <Text style={ styles.TextLarge }>Sign up</Text>
+                                <Text style={ styles.TextLarge }> {t('Register')} </Text>
                             </TouchableOpacity>
                         </View>
 

@@ -4,6 +4,7 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
 import Setting from '../constants/Setting';
+import LinkView from "./activities/links/LinkView";
 
 export default class LinksScreen extends React.Component {
 
@@ -44,9 +45,16 @@ export default class LinksScreen extends React.Component {
       )
     }
 
+    let update = ( item ) => {
+      navigate('LinkView', item)
+      LinkView.navigationOptions = {
+        title: item.title,
+      };
+    }
+
     let _renderItem = ({ item }) => (
       <View>
-        <TouchableOpacity style={styles.option} onPress={ () => { navigate('LinkView', item) }}>
+        <TouchableOpacity style={styles.option} onPress={ () => { update(item) }}>
           <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
             <View style={styles.optionIconContainer}>
               <Ionicons name="ios-link" size={22} color="#ccc" />

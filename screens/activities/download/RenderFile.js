@@ -59,7 +59,7 @@ export default class RenderFile extends Component {
 
     const downloadResource = () => {
       FileSystem.downloadAsync(
-        Setting.DDLAttachment + res.resource_id + '/' + res.id + '/' + res.file_name,
+          Setting.FileApi + res.resource_id,
         FileSystem.documentDirectory + res.file_name
       )
       .then(({ uri }) => {
@@ -95,7 +95,7 @@ export default class RenderFile extends Component {
           <WebView 
             source={
               (res.file_name) ? 
-              { uri: Setting.DDLAttachment + res.resource_id + '/' + res.id + '/' + res.file_name } :
+              {  uri: Setting.FileApi + res.resource_id } :
               { html: '<h1 align="center">file not available!</h1>' }
             }
             scalesPageToFit={true}

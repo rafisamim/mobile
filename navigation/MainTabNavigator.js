@@ -20,6 +20,7 @@ import DownloadsScreen from '../screens/DownloadsScreen';
 import ResourceDetailScreen from '../screens/activities/resources/ResourceDetailScreen';
 import RenderPdfScreen from '../screens/activities/resources/RenderPDF';
 import RenderDownloadedFile from '../screens/activities/download/RenderFile';
+import Setting from "../constants/Setting";
 
 const CustomDrawerComponent = (props) => (
   <ScrollView>
@@ -45,14 +46,16 @@ const config = Platform.select({
     defaultNavigationOptions: (data) => {
       return {
         headerTitleStyle: {
-          color: '#000'
+          color: '#000',
+            maxWidth: 280,
         },
         headerStyle:{
-          backgroundColor: '#FFA800'
+          backgroundColor: '#FFA800',
         },
-        headerLeft: (
-          <Ionicons name='md-menu' size={28} style={{ marginLeft: 20 }} onPress={ () => data.navigation.toggleDrawer() }></Ionicons>
-        ),
+        headerLeft : () => {
+            return (<Ionicons name='md-menu' size={28} style={{ marginLeft: 20 }} onPress={ () => data.navigation.toggleDrawer() }></Ionicons>)
+    }
+    ,
         unmountInactiveRoutes: true,
         unmountInactiveScreens: true
       }

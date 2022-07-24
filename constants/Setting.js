@@ -11,6 +11,7 @@ const mainUrl = 'https://darakhtdanesh.org/'
 export default {
   mainUrl,
   LoginUrl: mainUrl + 'api/login',
+  SignUpUrl: mainUrl + 'api/register',
   s3Url: 'https://ddl-resources.s3-ap-southeast-1.amazonaws.com/resources/',
   swUrl: 'https://ddl.af/en/storyweaver/confirm/storyweaver_default',
   DDLFilesUrl: mainUrl + 'public/storage/files/',
@@ -22,5 +23,6 @@ export default {
   featuredResources: mainUrl + 'api/featured_resources/',
   linksApi: mainUrl + 'api/links/',
   newsApi: mainUrl + 'api/news_list/',
-  pageApi: mainUrl + 'api/page/',
+  pageApi: mainUrl + 'api/page_view/',
+  FileApi: mainUrl + 'api/resource/getFile/',
 };

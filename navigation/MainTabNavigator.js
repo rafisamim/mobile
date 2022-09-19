@@ -232,7 +232,7 @@ NewsStack.navigationOptions = ({ screenProps: { t } }) => ({
   drawerLabel: t('news'),
   tabBarLabel: t('news'),
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-paper' : 'md-paper'} style={{color: 'orange'}} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-newspaper' : 'md-newspaper'} style={{color: 'orange'}} />
   ),
 });
 

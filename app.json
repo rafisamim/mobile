@@ -3,15 +3,15 @@
     "name": "DDL",
     "slug": "DarakhtDaneshApp",
     "privacy": "public",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "cover",
@@ -27,8 +27,11 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.cw4wafghan.ddlapp"
+      "permissions": [],
+      "package": "com.cw4wafghan.ddlapp",
+      "versionCode": 2
     },
-    "description": ""
+    "description": "",
+    "primaryColor": "#FFA800"
   }
 }

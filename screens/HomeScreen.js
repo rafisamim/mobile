@@ -134,7 +134,7 @@ export default class HomeScreen extends Component {
       });
 
       return(
-        <ScrollView style={ styles.container }>
+        <ScrollView  style={ styles.container }>
     
           <ScrollView scrollEventThrottle={16}>
     

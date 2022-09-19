@@ -50,7 +50,7 @@ export default class NewsScreen extends React.Component {
 
           <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
             <View style={styles.optionIconContainer}>
-              <Ionicons name="ios-paper" size={22} color="#ccc" />
+              <Ionicons name="newspaper" size={22} color="#ccc" />
             </View>
             <View style={styles.optionTextContainer}>
               <Text style={styles.optionText}> 

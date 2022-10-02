@@ -53,4 +53,12 @@ export default class PageView extends React.Component {
     );
 
   }
+
 }
+
+
+}
+PageView.navigationOptions = {
+  title: "COVID-19",
+};
+

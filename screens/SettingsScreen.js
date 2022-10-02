@@ -46,4 +46,25 @@ const styles = StyleSheet.create({
   btn: {
 
   }
+  optionsTitleText: {
+    fontSize: 16,
+    marginLeft: 15,
+    marginTop: 9,
+    marginBottom: 12,
+  },
+  optionIconContainer: {
+    marginRight: 9,
+    marginLeft: 9,
+  },
+  option: {
+    backgroundColor: '#fdfdfd',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#ccc',
+  },
+  optionText: {
+    fontSize: 15,
+    marginTop: 1,
+  },
 });

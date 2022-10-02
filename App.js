@@ -10,7 +10,7 @@ import { NativeModules } from 'react-native';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-console.log(AppNavigator);
+  console.log(AppNavigator);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <AppLoading

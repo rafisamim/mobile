@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View, Text, Image, Dimensions, ActivityIndicator, Modal, Button, Linking } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+  Modal,
+  Button,
+  Linking,
+  AsyncStorage
+} from 'react-native';
 import { Subjects } from './activities/home';
 import { FeaturedResources } from './activities/home';
 import { Card } from 'native-base';
@@ -7,6 +19,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 import Setting from '../constants/Setting';
+import {Updates} from "expo";
+import NewsView from "./activities/news/NewsView";
+import PageView from "./activities/page/PageView";
 
 const {height, width} = Dimensions.get('window');
 
@@ -23,6 +38,8 @@ export default class HomeScreen extends Component {
       modalVisibility: false,
     }
   }
+
+
 
   async componentDidMount(){
     this.didFocusSubscription = this.props.navigation.addListener('didFocus', this.didFocusAction);
@@ -84,8 +101,8 @@ export default class HomeScreen extends Component {
         flex: 1,
         backgroundColor: 'rgba(000, 000, 000, 1)',
         alignContent: 'center',
-        padding: 10,
-        paddingTop: 200,
+        padding: 0,
+        paddingTop: 0,
         paddingBottom: 200,
         height:20,
         justifyContent: 'center'
@@ -97,8 +114,9 @@ export default class HomeScreen extends Component {
     {
       let categories = this.state.categoriesDataSource.map( (category, key) => {
         return( 
-          <TouchableOpacity key={key} onPress={ () => { navigate('Resources', { type: 'subject_area', catId: category.subject_area, title: category.name, language: i18n.language }) } }>
-            <Subjects icon={ category.file_name } subjectTitle={ category.name } />
+          <TouchableOpacity  key={key} onPress={ () => {
+            navigate('Resources', { type: 'subject_area', catId: category.subject_area, title: category.name, language: i18n.language }) } }>
+            <Subjects icon={ category.file_name } subjectTitle={  category.name } />
           </TouchableOpacity>
         )
       });
@@ -116,7 +134,7 @@ export default class HomeScreen extends Component {
       });
 
       return(
-        <ScrollView style={ styles.container }>
+        <ScrollView  style={ styles.container }>
     
           <ScrollView scrollEventThrottle={16}>
     
@@ -140,7 +158,11 @@ export default class HomeScreen extends Component {
                   <FeaturedResources title={ t("StoryWeaver") } icon={"sw"} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={ () => { navigate('PageView', { pageId: 4133 }) } }>
+                <TouchableOpacity onPress={ () => { navigate('PageView');
+                  PageView.navigationOptions = {
+                  title: t("COVID19"),
+                };
+                }}>
                   <FeaturedResources title={ t("COVID19") } icon={"covid"} />
                 </TouchableOpacity>
 
@@ -152,34 +174,45 @@ export default class HomeScreen extends Component {
               <Text style={ styles.subTitle}>{ t('Watch a video to learn more about our work in Afghanistan') }</Text>
             </View>
         
-            <TouchableOpacity onPress={ () => { this.setState({ modalVisibility: true }) } }>
+            <TouchableOpacity style={ {marginBottom: 20} } onPress={ () => { this.setState({ modalVisibility: true }) } }>
               <Card style={{ width: width-40, height:200, borderRadius: 5, marginTop: 10 }}>
                 <Image source={require('../assets/images/home/learn_more.png')} style={{ flex:1, height:null, width:null, resizeMode: 'cover', borderRadius: 5 }} ></Image>
               </Card>
             </TouchableOpacity>
 
             <Modal visible={ this.state.modalVisibility } animationType="slide" style={{  }}>
-              <View style={ styles.modalContainer }>
-                
-                <YoutubePlayer
-                  ref={ null }
-                  height={300}
-                  width={400}
-                  videoId={"bF5dpED9W64"}
-                  play={true}
-                  onChangeState={event => console.log(event)}   
-                  onReady={() => console.log("ready")}
-                  onError={e => console.log(e)}
-                  onPlaybackQualityChange={q => console.log(q)}
-                  volume={50}
-                  playbackRate={1}
-                  playerParams={{
-                    cc_lang_pref: "us",
-                    showClosedCaptions: true
-                  }}
-                />
-                <Button title="close" onPress={ () => { this.setState({ modalVisibility: false }) } }>
-                </Button>
+              <View style={ styles.modalContainer } >
+                <View style={{
+                  marginTop: 10,
+                  marginRight: 10,
+                  alignSelf: 'flex-end',
+                  padding: 10
+                }}>
+                  <Button color={'black'} title="Close" onPress={ () => { this.setState({ modalVisibility: false }) } }>
+                  </Button>
+                </View>
+                <View style={{paddingTop:200}} pointerEvents="none">
+                  <YoutubePlayer
+                      title={ 'Darakht-e-Danesh Library' }
+                      ref={ null }
+                      height={300}
+                      width={400}
+                      videoId={"bF5dpED9W64"}
+                      play={true}
+                      onChangeState={event => console.log(event)}
+                      onReady={() => console.log("ready")}
+                      onError={e => console.log(e)}
+                      onPlaybackQualityChange={q => console.log(q)}
+                      volume={50}
+                      playbackRate={1}
+                      initialPlayerParams={{
+                        controls: 0,
+                        cc_lang_pref: "us",
+                        showClosedCaptions: true
+                      }}
+                  />
+                </View>
+
               </View>
             </Modal>
     

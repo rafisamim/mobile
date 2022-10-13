@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import {View, Button, StyleSheet, Text, RefreshControl} from 'react-native';
 import {AsyncStorage} from 'react-native';
+import {FlatList, TouchableOpacity} from "react-native-gesture-handler";
+import {Ionicons} from "@expo/vector-icons";
 
 export default class SettingsScreen extends Component {
+
+  state = {
+    data: [
+      {title:'English' ,lang:'en'},
+      {title:'فارسی' ,lang:'fa'},
+      {title:'پشتو' ,lang:'ps'},
+    ]
+  }
+
   render(){
 
     let { t, i18n} = this.props.screenProps;
@@ -16,19 +27,32 @@ export default class SettingsScreen extends Component {
       }
     };
 
+    let renderItem = ({ item }) => (
+        <View>
+          <TouchableOpacity
+              style={styles.option}
+              onPress={ () => { changeLang(item.lang) }}>
+
+            <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
+              <View style={styles.optionIconContainer}>
+                <Ionicons name="ios-globe" size={22} color="#ccc" />
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={styles.optionText}>
+                  { ((item.title.length >= 50) ? item.title.substr(0, 50) + ' ... ' : item.title) }
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
+    );
+
     return (
-      <View style={ styles.container }>
-        <Button style={ styles.btn } title={ t('en') } onPress={ () => { changeLang('en') }} />
-        <Button style={ styles.btn } title={ t('fa') } onPress={ () => { changeLang('fa') }} />
-        <Button style={ styles.btn } title={ t('ps') } onPress={ () => { changeLang('ps') }} />
-        {/*
-        <Button style={ styles.btn } title={ t('uz') } onPress={ () => { changeLang('uz') }} />
-        <Button style={ styles.btn } title={ t('mj') } onPress={ () => { changeLang('mj') }} />
-        <Button style={ styles.btn } title={ t('no') } onPress={ () => { changeLang('no') }} />
-        <Button style={ styles.btn } title={ t('sw') } onPress={ () => { changeLang('sw') }} />
-        <Button style={ styles.btn } title={ t('sh') } onPress={ () => { changeLang('sh') }} />
-        */}
-      </View>
+        <FlatList
+            data={this.state.data}
+            keyExtractor={ (item, index) => index.toString() }
+            renderItem={ renderItem }
+        />
     )
   }
 }
@@ -43,7 +67,25 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
   },
-  btn: {
-    padding:20
-  }
+  optionsTitleText: {
+    fontSize: 16,
+    marginLeft: 15,
+    marginTop: 9,
+    marginBottom: 12,
+  },
+  optionIconContainer: {
+    marginRight: 9,
+    marginLeft: 9,
+  },
+  option: {
+    backgroundColor: '#fdfdfd',
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#ccc',
+  },
+  optionText: {
+    fontSize: 15,
+    marginTop: 1,
+  },
 });

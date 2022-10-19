@@ -4,6 +4,8 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
 import Setting from '../constants/Setting';
+import LinkView from "./activities/links/LinkView";
+import NewsView from "./activities/news/NewsView";
 
 export default class NewsScreen extends React.Component {
 
@@ -29,10 +31,7 @@ export default class NewsScreen extends React.Component {
     })
   }
 
-  /**
-   * Go ahead and delete ExpoConfigView and replace it with your content;
-   * we just wanted to give you a quick view of your config.
-   */
+
   render() {
     const { navigate } = this.props.navigation;
     if(this.state.isLoading){
@@ -43,15 +42,15 @@ export default class NewsScreen extends React.Component {
       )
     }
 
-    _renderItem = ({ item }) => (
+    let _renderItem = ({ item }) => (
       <View>
         <TouchableOpacity 
           style={styles.option}
-          onPress={ () => { navigate('NewsView', item) }}>
+          onPress={ () => {  navigate('NewsView', item) }}>
 
           <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
             <View style={styles.optionIconContainer}>
-              <Ionicons name="ios-paper" size={22} color="#ccc" />
+              <Ionicons name="newspaper" size={22} color="#ccc" />
             </View>
             <View style={styles.optionTextContainer}>
               <Text style={styles.optionText}> 

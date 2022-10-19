@@ -4,6 +4,7 @@ import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
 import Setting from '../constants/Setting';
+import LinkView from "./activities/links/LinkView";
 
 export default class LinksScreen extends React.Component {
 
@@ -20,13 +21,14 @@ export default class LinksScreen extends React.Component {
 
   getData = async() => {
     await fetch(Setting.linksApi + this.props.screenProps.i18n.language)
-    .then(data => data.json())
-    .then(res => {
-      this.setState({
-        data: res.data,
-        isLoading: false
-      });
-    })
+        .then(data => data.json())
+        .then(res => {
+          console.log(res);
+          this.setState({
+            data: res,
+            isLoading: false
+          });
+        })
   }
 
   /**
@@ -37,41 +39,48 @@ export default class LinksScreen extends React.Component {
     const { navigate } = this.props.navigation;
     if(this.state.isLoading){
       return(
-        <View style={{ flex: 1, alignItems: 'center', padding:0, paddingTop: 15 }}>
-          <ActivityIndicator animating size={'small'} />
-        </View>
+          <View style={{ flex: 1, alignItems: 'center', padding:0, paddingTop: 15 }}>
+            <ActivityIndicator animating size={'small'} />
+          </View>
       )
     }
 
-    _renderItem = ({ item }) => (
-      <View>
-        <TouchableOpacity style={styles.option} onPress={ () => { navigate('LinkView', item) }}>
-          <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
-            <View style={styles.optionIconContainer}>
-              <Ionicons name="ios-link" size={22} color="#ccc" />
+    let update = ( item ) => {
+      navigate('LinkView', item)
+      LinkView.navigationOptions = {
+        title: item.title,
+      };
+    }
+
+    let _renderItem = ({ item }) => (
+        <View>
+          <TouchableOpacity style={styles.option} onPress={ () => { update(item) }}>
+            <View style={{ flexDirection: (this.props.screenProps.i18n.language != 'en') ? 'row-reverse' : 'row' }}>
+              <View style={styles.optionIconContainer}>
+                <Ionicons name="ios-link" size={22} color="#ccc" />
+              </View>
+              <View style={styles.optionTextContainer}>
+                <Text style={styles.optionText}>
+                  { ((item.title.length >= 50) ? item.title.substr(0, 50) + ' ... ' : item.title) }
+                </Text>
+              </View>
             </View>
-            <View style={styles.optionTextContainer}>
-              <Text style={styles.optionText}>
-                { ((item.title.length >= 50) ? item.title.substr(0, 50) + ' ... ' : item.title) } 
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
+          </TouchableOpacity>
+        </View>
     );
 
 
     return(
         <FlatList
-          data={this.state.data}
-          keyExtractor={ (item, index) => index.toString() }
-          renderItem={ _renderItem }
-          refreshControl={ 
-            <RefreshControl 
-              refreshing={ this.state.refreshing } 
-              onRefresh={ () => { this.getData() } }
-            /> 
-          }
+            data={this.state.data}
+            keyExtractor={ (item, index) => index.toString() }
+            renderItem={ _renderItem }
+            refreshControl={
+              <RefreshControl
+                  refreshing={ this.state.refreshing }
+                  onRefresh={ () => { this.getData() } }
+              />
+            }
         />
     )
   }

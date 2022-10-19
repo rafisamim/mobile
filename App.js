@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
@@ -9,7 +9,7 @@ import I18n from './locales';
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-
+  console.log(AppNavigator);
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <AppLoading

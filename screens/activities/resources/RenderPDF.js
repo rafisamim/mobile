@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import WebView from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
@@ -10,6 +10,7 @@ import Setting from '../../../constants/Setting';
 import PdfReader from '../../../src';
 
 export default class RenderPDF extends Component {
+
   render(){
 
     const res = this.props.navigation.getParam('data');
@@ -22,7 +23,11 @@ export default class RenderPDF extends Component {
       )
     };
 
-    console.log(Setting.s3Url + res.file_name);
+    this.props.navigation.navigate({
+      params: {data: res, title: this.props.navigation.getParam('title')}
+    })
+
+
 
     let storeData = async (uri) => {
       try {
@@ -52,40 +57,39 @@ export default class RenderPDF extends Component {
       }
     };
 
-    let resourceExists = async () => {
-      try {
-        console.log('checking if file exists');
-        const existingResources = await AsyncStorage.getItem('resources');
-        let fileExists = false;
+      async function resourceExists() {
+       try {
+         console.log('checking if file exists');
+         const existingResources = await AsyncStorage.getItem('resources');
+         let fileExists = false;
 
-        let resources = JSON.parse(existingResources);
-        if(resources)
-        {
-          for (i=0; i < resources.length; i++) {
-              if (resources[i].file_name == res.file_name)
-              fileExists = true;
-          }
+         let resources = JSON.parse(existingResources);
+         if (resources) {
+           for (let i = 0; i < resources.length; i++) {
+             if (resources[i].file_name == res.file_name)
+               fileExists = true;
+           }
 
-          if(fileExists)
-          alert("Resource already downloaded!");
+           if (fileExists)
+             alert("Resource already downloaded!");
 
-          else 
-          initDownload();
+           else
+             initDownload();
 
-        } else{
-            initDownload();
-        }
+         } else {
+           initDownload();
+         }
 
-      } catch (error) {
-        // Error saving data
-      }
-    };
+       } catch (error) {
+         // Error saving data
+       }
+     };
 
     let initDownload = () => {
 
       alert('Download Started!');
       FileSystem.downloadAsync(
-        Setting.s3Url + res.file_name,
+          Setting.FileApi + res.resource_id,
         FileSystem.documentDirectory + res.file_name
       )
       .then(({ uri }) => {
@@ -102,7 +106,7 @@ export default class RenderPDF extends Component {
       return(
           <PdfReader
           source={{
-            uri: Setting.s3Url + res.file_name,
+            uri: Setting.FileApi + res.resource_id,
           }}
           customStyle={{
             readerContainerZoomContainer: {
@@ -120,7 +124,7 @@ export default class RenderPDF extends Component {
         <WebView 
           source={
             (res.file_name) ? 
-            { uri: Setting.s3Url + res.file_name } :
+            { uri: Setting.FileApi + res.resource_id } :
             { html: '<h1 align="center">file not available!</h1>' }
           }
           scalesPageToFit={true}
@@ -128,7 +132,9 @@ export default class RenderPDF extends Component {
           scrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
-          injectedJavaScript={ 'document.getElementsByClassName("header")[0].remove();' }
+          injectedJavaScript={ 'document.getElementsByClassName("header")[0].remove();' +
+              'document.getElementsByTagName(\'footer\')[0].remove();' +
+              'document.getElementsByTagName(\'hr\')[0].remove();' }
         />
       )
     }

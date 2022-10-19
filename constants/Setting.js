@@ -11,6 +11,7 @@ const mainUrl = 'https://darakhtdanesh.org/'
 export default {
   mainUrl,
   LoginUrl: mainUrl + 'api/login',
+  SignUpUrl: mainUrl + 'api/register',
   s3Url: 'https://ddl-resources.s3-ap-southeast-1.amazonaws.com/resources/',
   swUrl: 'https://ddl.af/en/storyweaver/confirm/storyweaver_default',
   DDLFilesUrl: mainUrl + 'public/storage/files/',
@@ -21,6 +22,13 @@ export default {
   resourceCategories: mainUrl + 'api/resource_categories/',
   featuredResources: mainUrl + 'api/featured_resources/',
   linksApi: mainUrl + 'api/links/',
+<<<<<<< HEAD
   newsApi: mainUrl + 'api/news/',
   pageApi: mainUrl + 'api/page/',
 };
+=======
+  newsApi: mainUrl + 'api/news_list/',
+  pageApi: mainUrl + 'api/page_view/',
+  FileApi: mainUrl + 'api/resource/getFile/',
+};
+>>>>>>> 3f3dd86 (all bug fixed)

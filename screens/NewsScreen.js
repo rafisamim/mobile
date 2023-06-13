@@ -36,7 +36,7 @@ export default class NewsScreen extends React.Component {
     const { navigate } = this.props.navigation;
     if(this.state.isLoading){
       return(
-        <View style={{ flex: 1, alignItems: 'center', padding:0, paddingTop: 15 }}>
+        <View style={{ flex: 1, alignItems: 'center', padding: 0, paddingTop: 15 }}>
           <ActivityIndicator animating size={'small'} />
         </View>
       )
@@ -55,9 +55,9 @@ export default class NewsScreen extends React.Component {
             <View style={styles.optionIconContainer}>
               <Ionicons name="newspaper" size={22} color="#ccc" />
             </View>
-            <View style={styles.optionTextContainer}>
+            <View style={ {marginRight:25} }>
               <Text style={styles.optionText}> 
-                { ((item.title.length >= 50) ? item.title.substr(0, 50) + ' ... ' : item.title) } 
+                { ((item.title.length >= 50) ? item.title.slice(0, 50) + ' ... ' : item.title) }
               </Text>
             </View>
           </View>
@@ -113,5 +113,6 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 15,
     marginTop: 1,
+    marginRight:15
   },
 });

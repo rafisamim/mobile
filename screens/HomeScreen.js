@@ -175,7 +175,7 @@ export default class HomeScreen extends Component {
             </View>
         
             <TouchableOpacity style={ {marginBottom: 10} } onPress={ () => { this.setState({ modalVisibility: true }) } }>
-              <Card style={{ width: width-40, height:200, marginLeft:5, borderRadius: 5, marginTop: 10, marginBottom: 20, backgroundColor: '#fff',shadowOpacity: 0.5 }}>
+              <Card style={{ width: width-40, height:(width-40)/1.77, marginLeft:5, borderRadius: 5, marginTop: 10, marginBottom: 20, backgroundColor: '#fff',shadowOpacity: 0.5 }}>
                 <Image source={require('../assets/images/home/learn_more.png')} style={{ flex:1 ,height:null, width:null, resizeMode: 'cover', borderRadius: 5 }} ></Image>
               </Card>
             </TouchableOpacity>
@@ -188,15 +188,15 @@ export default class HomeScreen extends Component {
                   alignSelf: 'flex-end',
                   padding: 10
                 }}>
-                  <Button color={'black'} title="Close" onPress={ () => { this.setState({ modalVisibility: false }) } }>
+                  <Button color={Platform.OS == "ios" ? "white" : "black"} title="Close" onPress={ () => { this.setState({ modalVisibility: false }) } }>
                   </Button>
                 </View>
-                <View style={{paddingTop:200}} pointerEvents="none">
+                <View style={{paddingTop:200}} >
                   <YoutubePlayer
                       title={ 'Darakht-e-Danesh Library' }
                       ref={ null }
-                      height={300}
-                      width={400}
+                      height={width/1.77}
+                      width={width}
                       videoId={"bF5dpED9W64"}
                       play={true}
                       onChangeState={event => console.log(event)}

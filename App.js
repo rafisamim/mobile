@@ -2,7 +2,7 @@ import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import {Platform, StatusBar, StyleSheet, View, AsyncStorage, NativeModules} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import I18n from './locales';
@@ -34,9 +34,23 @@ export default function App(props) {
 }
 
 async function loadResourcesAsync() {
-
   await AsyncStorage.getItem('lang').then((value) => {
-    I18n.changeLanguage(value);
+    if (value != null) {
+      console.log("inside - "+value)
+      I18n.changeLanguage(value);
+    } else {
+      let locale;
+      if(Platform.OS === "ios"){
+         locale = NativeModules.SettingsManager.settings.AppleLocale ||
+            NativeModules.SettingsManager.settings.AppleLanguages[0];
+      } else {
+     locale = NativeModules.I18nManager.localeIdentifier;
+        }
+
+    I18n.changeLanguage(locale.slice(0, 2));
+      console.log("phone lang - "+locale.slice(0, 2))
+  }
+
   })
 
   await Promise.all([

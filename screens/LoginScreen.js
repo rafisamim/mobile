@@ -12,7 +12,7 @@ import {
     Image,
     TouchableOpacity,
     AsyncStorage,
-    Alert
+    Alert, ActivityIndicator
 } from 'react-native';
 import * as Updates from 'expo-updates';
 
@@ -27,7 +27,8 @@ export default class LoginScreen extends Component {
             password: '',
             device_name:'samim', // need to get it dynamically used some modules but did not work with different devices
             error:'',
-            show:false
+            showError:false,
+            loading:false
         }
 
     }
@@ -44,6 +45,8 @@ export default class LoginScreen extends Component {
 
     submitLoginForm()
     {
+        this.setState({showError:false,  loading:true})
+
         let formdata = new FormData();
         formdata.append('email',this.state.email);
         formdata.append('password',this.state.password);
@@ -61,7 +64,7 @@ export default class LoginScreen extends Component {
         }).then(data => data.json())
             .then(res => {
                 if(res.message){
-                    this.setState({show:true})
+                    this.setState({showError:true,  loading:false})
                     this.setState({error:res.message})
                 }else if(res.user){
                     AsyncStorage.setItem('user', res.user);
@@ -156,7 +159,6 @@ export default class LoginScreen extends Component {
                 fontSize:18
             },
             error: {
-                textAlign: (i18n.language != 'en') ? 'right' : 'left',
                 color: '#da7437',
                 fontWeight: 'bold',
                 marginBottom:20,
@@ -171,7 +173,7 @@ export default class LoginScreen extends Component {
                 style={styles.container} >
 
                 <TouchableOpacity style={styles.skipButton} onPress={() => { this.setLoginStatus('skipped') }}>
-                    <Text style={{ color: '#fff', marginRight:10 }}> {t('Skip')} </Text>
+                    <Text style={{ color: '#fff', marginRight:10, marginTop:15 }}> {t('Skip')} </Text>
                 </TouchableOpacity>
 
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -186,7 +188,7 @@ export default class LoginScreen extends Component {
 
                             <TextInput
                                 style={ styles.inputStyle }
-                                placeholder={t("Email or Username")}
+                                placeholder={t("Email")}
                                 placeholderTextColor="#555"
                                 onChangeText={ (text) => { this.setState({ email: text}) }}
                             />
@@ -196,10 +198,12 @@ export default class LoginScreen extends Component {
                                 secureTextEntry={true}
                                 onChangeText={ (text) => { this.setState({ password: text}) }}
                             />
-                            {this.state.show ? <Text style={ styles.error }>{this.state.error}</Text> : null}
-                            <TouchableOpacity style={ styles.btn } onPress={() => this.submitLoginForm()}>
+                            {this.state.showError && <Text style={ styles.error }>{this.state.error}</Text>}
+                            {!this.state.loading && <TouchableOpacity style={ styles.btn } onPress={() => this.submitLoginForm()}>
                                 <Text style={ styles.btnText }>{t('Sign In')}</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity>}
+                            {!this.state.showError && this.state.loading && < ActivityIndicator animating={true} size="small"
+                                                                                                        style={{ paddingBottom:20 }}           color="#da7437" />}
                             <Text style={ styles.TextSlim }> {t('no account')} </Text>
                             <TouchableOpacity style={ styles.btnPrimary } onPress={ () => { navigate('Signup') } }>
                                 <Text style={ styles.TextLarge }> {t('Register')} </Text>

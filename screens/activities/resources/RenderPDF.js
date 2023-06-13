@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text, Image, StyleSheet, ScrollView, Dimensions, NativeEventEmitter, NativeModules} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  NativeEventEmitter,
+  NativeModules,
+  Alert
+} from 'react-native';
 import WebView from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
 import HTML from 'react-native-render-html';
@@ -10,6 +20,8 @@ import Setting from '../../../constants/Setting';
 import PdfReader from '../../../src';
 
 import * as IntentLauncher from 'expo-intent-launcher';
+import {t} from "i18next";
+import * as Updates from "expo-updates";
 
 export default class RenderPDF extends Component {
 
@@ -73,7 +85,14 @@ export default class RenderPDF extends Component {
            }
 
            if (fileExists)
-             alert( t("Resource already downloaded!") );
+           Alert.alert(
+               t("download"),
+               t("Resource already downloaded!"),
+               [],
+               {
+                 cancelable: true
+               }
+           );
 
            else
              initDownload();
@@ -89,7 +108,17 @@ export default class RenderPDF extends Component {
 
     let initDownload = () => {
 
-      alert( t('Download Started!') );
+
+        Alert.alert(
+          t("download"),
+          t("Download Started!"),
+          [],
+            {
+              cancelable: true
+            }
+      );
+
+
       FileSystem.downloadAsync(
           Setting.FileApi + res.resource_id,
         FileSystem.documentDirectory + res.file_name
@@ -97,7 +126,14 @@ export default class RenderPDF extends Component {
       .then(({ uri }) => {
         console.log('Finished downloading to ', uri);
         storeData(uri);
-        alert( t('Resource Downloaded!') );
+        Alert.alert(
+            t("download"),
+            t("Resource Downloaded!"),
+            [{ text: t("Go to downloads"), onPress: async () => {
+                this.props.navigation.navigate('Downloads')
+              } },
+              { text: t("Close"), onPress: () => {} }]
+        );
       })
       .catch(error => {
           alert( t('Resource Can not be Downloaded! ' + error) );
@@ -124,7 +160,7 @@ export default class RenderPDF extends Component {
     }if(res.file_mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || res.file_mime == 'application/msword')
     {
       return(
-          <WebView
+          <WebView style={{ marginTop:-30 }}
               source={
                 (res.file_name) ?
                     { uri: 'https://docs.google.com/viewerng/viewer?url=' + Setting.FileApi + res.resource_id } :
@@ -141,7 +177,7 @@ export default class RenderPDF extends Component {
       )
     }else {
       return(
-        <WebView 
+        <WebView
           source={
             (res.file_name) ? 
             { uri: Setting.FileApi + res.resource_id } :

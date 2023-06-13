@@ -11,7 +11,7 @@ import {
   Keyboard,
   Image,
   TouchableOpacity,
-  Alert, AsyncStorage, Linking
+  Alert, AsyncStorage, Linking, ActivityIndicator
 } from 'react-native';
 import * as Updates from 'expo-updates';
 import Setting from "../constants/Setting";
@@ -29,7 +29,8 @@ export default class SignupScreen extends Component {
       errorPassword:'',
       showPasswordError:false,
       errorName:'',
-      showNameError:false
+      showNameError:false,
+      loading:false
     }
 
   }
@@ -46,6 +47,8 @@ export default class SignupScreen extends Component {
 
   submitSignupForm()
   {
+    this.setState({showEmailError:false, showPasswordError:false, showNameError:false, loading:true})
+
     let formdata = new FormData();
     formdata.append('email',this.state.email);
     formdata.append('password',this.state.password);
@@ -69,6 +72,7 @@ export default class SignupScreen extends Component {
           }if(res.username){
             this.setState({showNameError:true})
             this.setState({errorName:res.username[0]})
+            this.setState({loading:false})
           }if(res.user){
             let {t,i18n} = this.props.screenProps;
             Alert.alert(
@@ -172,7 +176,6 @@ export default class SignupScreen extends Component {
         fontWeight: 'bold'
       },
       error: {
-        textAlign: (i18n.language != 'en') ? 'right' : 'left',
         color: '#da7437',
         fontWeight: 'bold',
         marginBottom:20,
@@ -187,8 +190,9 @@ export default class SignupScreen extends Component {
             style={styles.container} >
 
           <TouchableOpacity style={styles.skipButton} onPress={() => { this.setLoginStatus('skipped') }}>
-            <Text style={{ color: '#fff', marginRight:10 }}> {t('Skip')} </Text>
+            <Text style={{ color: '#fff', marginRight:10, marginTop:15 }}> {t('Skip')} </Text>
           </TouchableOpacity>
+
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.inner}>
 
@@ -200,19 +204,21 @@ export default class SignupScreen extends Component {
               <View style={styles.formContainer}>
                 <TextInput style={ styles.inputStyle } placeholder={t("Email")} placeholderTextColor="#555"
                            onChangeText={ (text) => { this.setState({ email: text}) }} />
-                {this.state.showEmailError ? <Text style={ styles.error }>{this.state.errorEmail}</Text> : null}
+                {this.state.showEmailError && <Text style={ styles.error }>{this.state.errorEmail}</Text>}
 
                 <TextInput style={ styles.inputStyle } placeholder={t("Username")} placeholderTextColor="#555"
                            onChangeText={ (text) => { this.setState({ username: text}) }} />
-                {this.state.showNameError ? <Text style={ styles.error }>{this.state.errorName}</Text> : null}
+                {this.state.showNameError && <Text style={ styles.error }>{this.state.errorName}</Text>}
 
                 <TextInput style={ styles.inputStyle } placeholder={t("Password")} placeholderTextColor="#555" secureTextEntry={true}
                            onChangeText={ (text) => { this.setState({ password: text}) }} />
-                {this.state.showPasswordError ? <Text style={ styles.error }>{this.state.errorPassword}</Text> : null}
+                {this.state.showPasswordError && <Text style={ styles.error }>{this.state.errorPassword}</Text>}
 
-                <TouchableOpacity style={ styles.btn } onPress={ () => this.submitSignupForm() }>
+                {!this.state.loading && <TouchableOpacity style={ styles.btn }  loading={true}  onPress={ () => this.submitSignupForm() }>
                   <Text style={ styles.btnText }>{t('Register')}</Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
+                {!this.state.showPasswordError && this.state.loading && < ActivityIndicator animating={true} size="small"
+                        style={{ paddingBottom:20 }}           color="#da7437" />}
                 <Text style={ styles.TextSlim }> {t('have account')} </Text>
                 <TouchableOpacity style={ styles.btnPrimary } onPress={ () => { navigate('Login') } }>
                   <Text style={ styles.TextLarge }>{t('Sign In')}</Text>

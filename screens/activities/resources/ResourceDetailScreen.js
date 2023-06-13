@@ -44,7 +44,7 @@ export default class ResourceDetail extends Component {
       coverPhoto:{
         height:350,
         width: Dimensions.get('window').width,
-        resizeMode: 'stretch',
+        resizeMode: 'cover',
       },
       hr:{
         borderBottomColor: '#eee',

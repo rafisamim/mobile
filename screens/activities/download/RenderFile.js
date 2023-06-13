@@ -37,7 +37,7 @@ export default class RenderFile extends Component {
           />
       )
     }
-      if(res.file_mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
+      if(res.file_mime == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || res.file_mime == 'application/msword'){
         return (
             <View style={ {paddingTop: 20} }>
                 <Text style={ styles.TextSlim }> {t('Can not open')} </Text>
@@ -58,9 +58,7 @@ export default class RenderFile extends Component {
         return(
           <WebView
             source={
-              (res.file_name) ?
-              {  uri: Setting.FileApi + res.resource_id } :
-              { html: '<h1 align="center">file not available!</h1>' }
+              { html: '<h1 style="padding-top: 60px" align="center">file not available!</h1>' }
             }
             scalesPageToFit={true}
             bounces={true}

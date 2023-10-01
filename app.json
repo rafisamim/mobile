@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.beta2",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -24,7 +24,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cw4wafghan.ddlapp"
+      "bundleIdentifier": "com.cw4wafghan.ddlapp",
+      "buildNumber": "4"
     },
     "android": {
       "permissions": [],

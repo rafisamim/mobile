@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {Alert, AsyncStorage, Dimensions, Linking, Platform, TouchableOpacity} from 'react-native';
+import {Alert, Dimensions, Platform, TouchableOpacity} from 'react-native';
 import { Text, View, SafeAreaView, ScrollView, Image } from 'react-native';
 import {createAppContainer} from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from '@avadon/react-navigation-drawer';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';

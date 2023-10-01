@@ -2,11 +2,14 @@ import AppLoading from 'expo-app-loading';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import {Platform, StatusBar, StyleSheet, View, AsyncStorage, NativeModules} from 'react-native';
+import {Platform, StatusBar, StyleSheet, View, NativeModules} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import I18n from './locales';
 import { NativeBaseProvider } from 'native-base';
+import * as Permissions from 'expo-permissions';
+
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -32,6 +35,7 @@ export default function App(props) {
     );
   }
 }
+
 
 async function loadResourcesAsync() {
   await AsyncStorage.getItem('lang').then((value) => {

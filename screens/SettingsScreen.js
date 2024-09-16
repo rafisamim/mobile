@@ -1,36 +1,100 @@
 import React, { Component } from "react";
-import { View, Button, StyleSheet, Text, RefreshControl } from "react-native";
+import { View, Button, StyleSheet, Text, RefreshControl, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import LanguageView from './activities/setting/LanguageView';
+import Setting from "../constants/Setting";
+import * as Updates from "expo-updates";
 
 export default class SettingsScreen extends Component {
-  state = {
-    data: [
-      { title: "English", lang: "en" },
-      { title: "فارسی", lang: "fa" },
-      { title: "پشتو", lang: "ps" },
-    ],
-  };
+  
+  constructor() {
+    super();
+    this.state = { status: '' };
+
+    AsyncStorage.getItem('loginState').then( async (data) => {
+      this.setState({ status: data });
+  } )
+  }
 
   render() {
     let { t, i18n } = this.props.screenProps;
-    async function changeLang(lang = "en") {
-      try {
-        await AsyncStorage.setItem("lang", lang);
-        i18n.changeLanguage(lang);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    const { navigate } = this.props.navigation;
 
-    let renderItem = ({ item }) => (
+   
+    
+  function Logout() {
+      AsyncStorage.getItem('loginState').then( async (data) => {
+          if (data === 'skipped') {
+              Alert.alert(
+                  t("Log Out"),
+                  t("You are not signed in to any account!"),
+                  [{ text: t("Close"), onPress: () => {} }]
+              );
+  
+          }
+          if (data === 'signedIn') {
+              AsyncStorage.getItem('user').then( async (user) => {
+                  Alert.alert(
+                      t("Log Out"),
+                      t("You are signed in as ")+user+ t(', do you want to logout?'),
+                      [{ text: t("Yes"), onPress: async () => {
+                              await AsyncStorage.removeItem('user');
+                              await AsyncStorage.removeItem('token');
+                              await AsyncStorage.removeItem('loginState');
+                              await Updates.reloadAsync();
+                          } },
+                          { text: t("No"), onPress: () => {} }]
+                  );
+              })
+          }
+      } )
+  
+  }
+    
+  function DeleteUser() {
+      Alert.alert(
+          t("Delete Account"),
+          t("Delete Account Confirmation"),
+          [{ text: t("Yes"), onPress: async () => {
+            fetch(Setting.DeleteUser, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }).then((data) => console.log(data) )
+              } },
+              { text: t("No"), onPress: () => {} }]
+      );
+}
+
+const deleteUser = async () => {
+  try {
+    const response = await fetch(Setting.DeleteUser, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers if needed, such as authentication headers
+      },
+      body: JSON.stringify({}), // You can pass any data if required by your backend
+    });
+
+    const data = await response.json();
+    console.log(data); // Assuming the response contains a message
+    // Do something with the data if needed
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    // Handle error
+  }
+};
+
+
+    return (
       <View>
         <TouchableOpacity
           style={styles.option}
-          onPress={() => {
-            changeLang(item.lang);
-          }}
+          onPress={() => {   navigate("Languages", { title: t("choose_language") }); }}
         >
           <View
             style={{
@@ -41,32 +105,69 @@ export default class SettingsScreen extends Component {
             }}
           >
             <View style={styles.optionIconContainer}>
-              <Ionicons name="ios-globe" size={22} color="#ccc" />
+              <Ionicons name="globe" size={22} color="#ccc" />
             </View>
             <View style={styles.optionTextContainer}>
               <Text style={styles.optionText}>
-                {item.title.length >= 50
-                  ? item.title.substr(0, 50) + " ... "
-                  : item.title}
+             { t("choose_language") }
               </Text>
             </View>
           </View>
         </TouchableOpacity>
+        { this.state.status == 'signedIn' && (
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => { Logout() }}
+        >
+          <View
+            style={{
+              flexDirection:
+                this.props.screenProps.i18n.language != "en"
+                  ? "row-reverse"
+                  : "row",
+            }}
+          >
+            <View style={styles.optionIconContainer}>
+              <Ionicons name="log-out" size={22} color="#ccc" />
+            </View>
+            <View style={styles.optionTextContainer}>
+              <Text style={styles.optionText}>
+              {t('Log Out')}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity> )}
+        { this.state.status == 'signedIn' && (
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => { deleteUser() }}
+        >
+          <View
+            style={{
+              flexDirection:
+                this.props.screenProps.i18n.language != "en"
+                  ? "row-reverse"
+                  : "row",
+            }}
+          >
+            <View style={styles.optionIconContainer}>
+              <Ionicons name="person-remove" size={22} color="#ccc" />
+            </View> 
+            <View style={styles.optionTextContainer}>
+              <Text style={styles.optionText}>
+              {  t("Delete Account") }
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>)}
       </View>
-    );
-
-    return (
-      <FlatList
-        data={this.state.data}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-      />
+      
     );
   }
 }
 
 SettingsScreen.navigationOptions = ({ screenProps: { t } }) => ({
-  title: t("choose_language"),
+  title: 'Settings',
 });
 
 const styles = StyleSheet.create({

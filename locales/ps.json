@@ -181,6 +181,8 @@
         "You are signed in as ": "آیا تاسی غواری له حساب نه ",
         ", do you want to logout?": "، ووځی؟",
         "You are not signed in to any account!": "تاسو هیڅ حساب ته ننوتل نه یاست!",
-        "Close": "بند کړه"
+        "Close": "بند کړه",
+        "Delete Account Confirmation" : "!آیا تاسو ډاډه یاست چې تاسو غواړئ خپل حساب حذف کړئ؟ دا کړنه بیرته نه شي کیدای",
+        "Delete Account" : "حساب حذف کول"
 }
 }

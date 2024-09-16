@@ -86,6 +86,8 @@
         "You are signed in as ": "آیا میخواهید از حساب ",
         ", do you want to logout?": "، خارج شوید؟",
         "You are not signed in to any account!": "شما به هیچ حسابی وارد نشده اید!",
-        "Close": "بستن"
+        "Close": "بستن",
+        "Delete Account Confirmation" : "!آیا مطمئن هستید که می‌خواهید حساب خود را حذف کنید؟ این عمل قابل بازگشت نیست",
+        "Delete Account" : "حذف حساب"
     }
 }

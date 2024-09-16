@@ -64,6 +64,7 @@
         "comment(s) so far":"comment(s) so far",
         "No Comment": "No Comment",
         "Can not open": "Can not open document!",
-        "Open with" : "Open with another app"
+        "Open with" : "Open with another app",
+        "Delete Account Confirmation" : "Are you sure you want to delete your account? This action cannot be undone!"
     }
 }

@@ -6,6 +6,7 @@ export default {
   mainUrl,
   LoginUrl: mainUrl + 'api/login',
   SignUpUrl: mainUrl + 'api/register',
+  DeleteUser:  mainUrl + 'api/user/delete',
   s3Url: 'https://ddl-resources.s3-ap-southeast-1.amazonaws.com/resources/',
   swUrl: 'https://ddl.af/en/storyweaver/confirm/storyweaver_default',
   DDLFilesUrl: mainUrl + 'public/storage/files/',
